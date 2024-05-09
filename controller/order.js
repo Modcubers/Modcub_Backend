@@ -41,6 +41,14 @@ router.post(
                     paymentInfo,
                 });
                 orders.push(order);
+                 // Update stock and sold count for each product in the order
+                for (const item of items) {
+                    await Product.findByIdAndUpdate(
+                        item._id,
+                        { $inc: { stock: -1, sold_out: 1 } }, // Reduce stock by 1 and increment sold_out by 1
+                        { new: true }
+                    );
+                }
             }
 
             res.status(201).json({
