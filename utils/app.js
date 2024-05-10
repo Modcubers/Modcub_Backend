@@ -9,7 +9,7 @@ const cors = require("cors");
 // Enable CORS
 // Enable CORS
 app.use(cors({
-    origin: "https://modcub-frontend-git-main-rajat-khannas-projects.vercel.app",
+    origin: "https://modcub.in",
     credentials: true,
 }));
 
