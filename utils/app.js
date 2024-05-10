@@ -11,12 +11,12 @@ app.use((req, res, next) => {
     next();
   });
   
-// app.use(
-//     cors({
-//         origin: "http://localhost:3000",
-//         credentials: true,
-//     })
-// );
+app.use(
+    cors({
+        origin: "https://aquamarine-sprite-4640e0.netlify.app/",
+        credentials: true,
+    })
+);
 // Increase maximum file size limit
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
