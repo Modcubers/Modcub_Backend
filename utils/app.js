@@ -5,17 +5,14 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
-app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-  });
-  
+
+// Enable CORS
 // Enable CORS
 app.use(cors({
-    origin: "*",
+    origin: "https://modcub-frontend-git-main-rajat-khannas-projects.vercel.app",
     credentials: true,
 }));
+
 // Increase maximum file size limit
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
