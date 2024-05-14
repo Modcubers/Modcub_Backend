@@ -9,7 +9,7 @@ const cors = require("cors");
 // Enable CORS
 // Enable CORS
 app.use(cors({
-    origin: "https://staging.modcub.in",
+    origin: process.env.ORIGIN,
     credentials: true,
 }));
 
