@@ -5,7 +5,24 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
+const {SitemapStream,streamToPromise}=require('sitemap')
 
+//adding the sitemap route 
+
+
+app.get('/sitemap.xml', (req, res) => {
+    const sitemap = new SitemapStream({ hostname: 'https://www.modcub.in' });
+  
+    matchRoutes(routes, req.path).map(({ route }) => {
+      sitemap.write({ url: route.path, changefreq: 'monthly', priority: 0.7 });
+    });
+  
+    sitemap.end();
+    streamToPromise(sitemap).then((sm) => {
+      res.header('Content-Type', 'application/xml');
+      res.send(sm);
+    });
+  });
 // Enable CORS
 // Enable CORS
 app.use(cors({
