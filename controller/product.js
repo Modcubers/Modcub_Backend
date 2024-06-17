@@ -7,6 +7,7 @@ const Order = require("../model/order");
 const Shop = require("../model/shop");
 const cloudinary = require("cloudinary");
 const ErrorHandler = require("../utils/ErrorHandler");
+const product = require("../model/product");
 
 // cloudinary.config({
 //     cloud_name: process.env.CLOUDINARY_NAME,
@@ -191,15 +192,16 @@ router.get(
                 .sort({ createdAt: -1 });
 
             // Filter products whose associated shop's expiration date is in the future
-            const filteredProducts = products.filter((product) => {
-                const expirationDate = new Date(product.shop.expirationDate);
-                return expirationDate >= currentDate;
-            });
+            // const filteredProducts = products.filter((product) => {
+            //     const expirationDate = new Date(product.shop.expirationDate);
+            //     return expirationDate >= currentDate;
+            // });
 
             res.status(200).json({
                 success: true,
-                products: filteredProducts,
-            });
+                // products: filteredProducts,
+                products: products,
+            });s
         } catch (error) {
             return next(new ErrorHandler(error, 400));
         }
