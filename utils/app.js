@@ -4,6 +4,8 @@ const app = express();
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+require("dotenv").config();
+
 
 const {SitemapStream,streamToPromise}=require('sitemap')
 
@@ -60,6 +62,8 @@ const order = require("../controller/order");
 const conversation = require("../controller/conversation");
 const message = require("../controller/message");
 const withdraw = require("../controller/withdraw");
+const conact = require("../controller/contact");
+
 
 app.use("/api/v2/user", user);
 app.use("/api/v2/conversation", conversation);
@@ -71,6 +75,7 @@ app.use("/api/v2/event", event);
 app.use("/api/v2/coupon", coupon);
 app.use("/api/v2/payment", payment);
 app.use("/api/v2/withdraw", withdraw);
+app.use("/api/v2/contact", conact);
 
 app.get("/", (req, res) => {
     res.json({ message: "server is working" });
