@@ -8,7 +8,8 @@ const Shop = require("../model/shop");
 const cloudinary = require("cloudinary");
 const ErrorHandler = require("../utils/ErrorHandler");
 const product = require("../model/product");
-
+const multer = require("multer");
+const upload= multer()
 // cloudinary.config({
 //     cloud_name: process.env.CLOUDINARY_NAME,
 //     api_key: process.env.CLOUDINARY_API_KEY,
@@ -69,6 +70,8 @@ router.post(
         }
     })
 );
+
+
 // approve product
 router.post(
     "/approve-product",
@@ -287,4 +290,55 @@ router.get(
         }
     })
 );
+
+// get single product
+router.get(
+    "/get-productdetails/:id",
+    // isAuthenticated,
+    catchAsyncErrors(async (req, res, next) => {
+        try {
+            const product = await Product.findById(req.params.id);
+            if (!product) {
+                return next(
+                    new ErrorHandler("Product is not found with this id", 404)
+                );
+            }
+            res.status(201).json({
+                success: true,
+                product,
+            });
+        } catch (error) {
+            return next(new ErrorHandler(error.message, 500));
+        }
+    })
+)
+
+//update product by id
+router.put(
+    "/update-product/:id",
+    // isAuthenticated,
+    upload.none(),
+    catchAsyncErrors(async (req, res, next) => {
+        try {
+            console.log('testthsdvhvd',req.body);
+            let product = await Product.findById(req.params.id);
+            if (!product) {
+                return next(
+                    new ErrorHandler("Product is not found with this id", 404)
+                );
+            }
+            product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+                new: true,
+                runValidators: true,
+                useFindAndModify: false,
+            });
+            res.status(201).json({
+                success: true,
+                product,
+            });
+        } catch (error) {
+            return next(new ErrorHandler(error.message, 500));
+        }
+    })
+)
 module.exports = router;

@@ -39,6 +39,13 @@ const orderSchema = new mongoose.Schema({
     deliveredAt: {
         type: Date,
     },
+    otp: {
+        type: String, // Store OTP here
+    },
+    otpVerified: {
+        type: Boolean, // Indicates if OTP has been verified
+        default: false,
+    },
     createdAt:{
         type: Date,
         default: Date.now(),

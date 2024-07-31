@@ -143,6 +143,8 @@ router.post(
     catchAsyncErrors(async (req, res, next) => {
         try {
             const { email, password } = req.body;
+            console.log("🚀 ~ catchAsyncErrors ~ password:", password)
+            console.log("🚀 ~ catchAsyncErrors ~ email:", email)
 
             if (!email || !password) {
                 return next(
@@ -151,6 +153,7 @@ router.post(
             }
 
             const user = await User.findOne({ email }).select("+password");
+            console.log("🚀 ~ catchAsyncErrors ~ user:", user)
 
             if (!user) {
                 return next(new ErrorHandler("User doesn't exists!", 400));
