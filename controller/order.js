@@ -7,6 +7,7 @@ const Order = require("../model/order");
 const Shop = require("../model/shop");
 const Product = require("../model/product");
 const { isExpired } = require("../middleware/auth");
+const { getOtp } = require("../helper/helper");
 // create new order
 router.post(
     "/create-order",
@@ -33,12 +34,15 @@ router.post(
             const orders = [];
 
             for (const [shopId, items] of shopItemsMap) {
+                const otp = getOtp(); // Generate OTP
+
                 const order = await Order.create({
                     cart: items,
                     shippingAddress,
                     user,
                     totalPrice,
                     paymentInfo,
+                    otp,
                 });
                 orders.push(order);
                  // Update stock and sold count for each product in the order
@@ -69,9 +73,12 @@ router.get(
         try {
             const orders = await Order.find({
                 "user._id": req.params.userId,
-            }).sort({
+            },
+            { otp: 0, otpVerified: 0 }
+        ).sort({
                 createdAt: -1,
             });
+            console.log("🚀 ~ catchAsyncErrors ~ orders:", orders)
 
             res.status(200).json({
                 success: true,
@@ -90,7 +97,9 @@ router.get(
         try {
             const orders = await Order.find({
                 "cart.shopId": req.params.shopId,
-            }).sort({
+            },
+            { otp: 0, otpVerified: 0 }
+        ).sort({
                 createdAt: -1,
             });
 
@@ -232,6 +241,7 @@ router.put(
     })
 );
 
+
 // all orders --- for admin
 router.get(
     "/admin-all-orders",
@@ -252,5 +262,39 @@ router.get(
         }
     })
 );
+// Verify OTP
+router.post(
+    "/verify-otp/:orderId",
+    catchAsyncErrors(async (req, res, next) => {
+        try {
+            const { otp } = req.body;
+            const order = await Order.findById(req.params.orderId);
+
+            if (!order) {
+                return next(new ErrorHandler("Order not found with this id", 400));
+            }
+
+            if (order.otpVerified) {
+                return next(new ErrorHandler("OTP already verified", 400));
+            }
+
+            if (order.otp !== otp) {
+                return next(new ErrorHandler("Invalid OTP", 400));
+            }
+
+            // OTP is valid
+            order.otpVerified = true;
+            await order.save();
+
+            res.status(200).json({
+                success: true,
+                message: "OTP verified successfully!",
+            });
+        } catch (error) {
+            return next(new ErrorHandler(error.message, 500));
+        }
+    })
+);
+
 
 module.exports = router;
