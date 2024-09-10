@@ -2,12 +2,13 @@ const express = require("express");
 const router = express.Router();
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const Razorpay = require("razorpay");
+require("dotenv").config();
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const razorpay = new Razorpay({
-    key_id: "rzp_test_JPBKvtfFBllt9C", // Replace with your Razorpay key id
-    key_secret: "atQzPRO0UhK5iTXxLBs78tMc", // Replace with your Razorpay key secret
+    key_id: process.env.RAZORPAY_KEY_ID, // Replace with your Razorpay key id
+    key_secret: process.env.RAZORPAY_SECRET, // Replace with your Razorpay key secret
 });
 
 router.post(
