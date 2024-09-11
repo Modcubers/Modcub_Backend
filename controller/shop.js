@@ -11,10 +11,11 @@ const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ErrorHandler = require("../utils/ErrorHandler");
 const sendShopToken = require("../utils/shopToken");
 const Razorpay = require("razorpay");
+require("dotenv").config();
 
 const razorpay = new Razorpay({
-    key_id: "rzp_test_JPBKvtfFBllt9C", // Replace with your Razorpay key id
-    key_secret: "atQzPRO0UhK5iTXxLBs78tMc", // Replace with your Razorpay key secret
+    key_id: process.env.RAZORPAY_KEY_ID, // Replace with your Razorpay key id
+    key_secret: process.env.RAZORPAY_SECRET, // Replace with your Razorpay key secret
 });
 //create cloudinary config and signature
 const timestamp = Math.round(new Date().getTime() / 1000);
